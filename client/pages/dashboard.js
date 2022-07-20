@@ -1,14 +1,25 @@
-import { Box, Text, Flex, Button } from "@chakra-ui/react";
+import { Box, Tabs, TabList, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
+import BalanceManager from "../components/BalanceManager";
 
 const Dashboard = () => {
   return (
     <Box bg="gray.100" h="100vh" p="10">
-      <Flex justify="space-between" bg="gray.200" p="5">
-        <Text color="gray.600" fontSize="2xl">Your Balance: <Text as="span" color="blue.600">9500 $Matic</Text></Text>
-        <Button colorScheme="orange">
-            Withdraw
-        </Button>
-      </Flex>
+      <BalanceManager />
+      <Tabs mt="5">
+        <TabList>
+          <Tab>Posts</Tab>
+          <Tab>Tiers</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <Box>Posts going to be here</Box>
+          </TabPanel>
+          <TabPanel>
+            <Box>Tiers exists</Box>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Box>
   );
 };
