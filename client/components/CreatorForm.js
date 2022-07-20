@@ -9,7 +9,7 @@ import {
 
 const CreatorForm = () => {
   return (
-    <VStack py="10" bg="gray.200" width="90%" maxWidth="600px" spacing={4}>
+    <VStack py="10" bg="gray.200" width="100%"  spacing={4}>
       <Box>
         <VisuallyHidden>
           <input name="avatar" id="avatar" display="hidden" type="file" />
