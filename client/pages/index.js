@@ -31,7 +31,7 @@ const Home = () => {
           "0x0000000000000000000000000000000000000000";
 
         if (existed) {
-          router.push(`/creator/${await registry.creatorsMapping(account)}`);
+          router.push(`/creator/${account}`);
         } else {
           router.push("/setup");
         }

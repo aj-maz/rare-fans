@@ -1,12 +1,12 @@
 import { Text, Flex, Button } from "@chakra-ui/react";
 
-const BalanceManager = () => {
+const BalanceManager = ({ loading, contractBalance }) => {
   return (
-    <Flex justify="space-between" bg="gray.200" p="5">
+    <Flex justify="space-between" bg="gray.200" p="5" borderRadius={6}>
       <Text color="gray.600" fontSize="2xl">
         Your Balance:{" "}
         <Text as="span" color="blue.600">
-          9500 $Matic
+          {loading ? "Loading Balance" : `${contractBalance} $Matic`}
         </Text>
       </Text>
       <Button colorScheme="orange">Withdraw</Button>
