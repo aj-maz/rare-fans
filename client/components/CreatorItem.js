@@ -74,11 +74,11 @@ const CreatorItem = ({ creatorAddress }) => {
       <Flex align="center">
         <Avatar
           name="Dan Abrahmov"
-          src={`https://ipfs.io/ipfs/${info.avatar}`}
+          src={`https://ipfs.io/ipfs/${info?.avatar}`}
         />
 
         <Text ml="5" size="xl">
-          {info.dpName}
+          {info?.dpName}
         </Text>
       </Flex>
     </Box>

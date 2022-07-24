@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import LitJsSdk from "lit-js-sdk";
-import { Button } from "@chakra-ui/react";
+import { Button, Textarea, Flex, Stack, Select } from "@chakra-ui/react";
 import { LitContext } from "../lib/LitProvider";
 import CondiationCreator from "../lib/CondiationCreator";
 import StoreEncryptionData from "../lib/StoreEncryptionData";
@@ -52,39 +52,6 @@ const PostCreator = () => {
     console.log(`ROOT CID: ${rootCid}`);
 
     console.log("encryptedSymmetricKey:", encryptedSymmetricKey);
-    // console.log("encryptedString:", encryptedString);
-
-    /* const toDecrypt = LitJsSdk.uint8arrayToString(
-      encryptedSymmetricKey,
-      "base16"
-    );
-    // console.log("toDecrypt: ", toDecrypt);
-
-    const _symmetricKey = await client.getEncryptionKey({
-      accessControlConditions,
-      toDecrypt: toDecrypt,
-      chain,
-      authSig,
-    });
-    console.log("_symmetricKey:", _symmetricKey);
-
-    // <String> decryptedString
-
-    const encryptedBlob = new Blob([toDecryptMessage], {
-      type: "application/octet-stream",
-    });
-
-    // console.log(symmetricKey, _symmetricKey);
-
-    try {
-      const decryptedString = await LitJsSdk.decryptString(
-        encryptedString,
-        _symmetricKey
-      );
-      //   console.log("decryptedString:", decryptedString);
-    } catch (err) {
-      //    console.log(err);
-    }*/
   };
 
   const decrypt = async ({
@@ -93,46 +60,42 @@ const PostCreator = () => {
     encryptedString,
   }) => {
     const chain = process.env.NEXT_PUBLIC_TARGET_CHAIN;
-
     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
-
     const toDecrypt = LitJsSdk.uint8arrayToString(
       encryptedSymmetricKey,
       "base16"
     );
-
     const symmetricKey = await client.getEncryptionKey({
       accessControlConditions,
       toDecrypt,
       chain,
       authSig,
     });
-
     const decryptedString = await LitJsSdk.decryptString(
       encryptedString,
       symmetricKey
     );
-
-    console.log(decryptedString);
   };
 
   return (
     <div>
-      <Button
-        onClick={async () => {
-          //doLit(message);
-          const encryptionData = await FetchEncryptionData(
-            "bafkreiadxvptm556uabfg3jh2bf3jsc2n5rairqt57jexnaok5nf5evyja"
-          );
-          
-          console.log(encryptionData);
-          
-          console.log(await decrypt(encryptionData));
-        }}
-      >
-        Decrypt
-      </Button>
-      THis is going to be the post creator
+      <Textarea placeholder="Tell your rare fans something valuable"></Textarea>
+      <Flex mt="2" justify="space-between">
+        <Stack spacing={3}>
+          <Select placeholder="Select The Proper Tier" size="sm" />
+        </Stack>
+        <Button
+          onClick={async () => {
+            //const encryptionData = await FetchEncryptionData(
+            //  "bafkreiadxvptm556uabfg3jh2bf3jsc2n5rairqt57jexnaok5nf5evyja"
+            //);
+            //console.log(encryptionData);
+            //console.log(await decrypt(encryptionData));
+          }}
+        >
+          Post
+        </Button>
+      </Flex>
     </div>
   );
 };

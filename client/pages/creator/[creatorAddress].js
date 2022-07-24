@@ -20,7 +20,6 @@ import CreatorRegistry from "../../abis/CreatorRegistry.json";
 import Creator from "../../abis/Creator.json";
 
 const Dashboard = () => {
-
   const {
     active,
     account,
@@ -83,22 +82,26 @@ const Dashboard = () => {
         )}
         <Tabs mt="5">
           <TabList>
-            <Tab>Posts</Tab>
             <Tab>Tiers</Tab>
+
+            <Tab>Posts</Tab>
           </TabList>
 
           <TabPanels>
             <TabPanel>
-              <Box>
-                <PostCreator />
-              </Box>
-            </TabPanel>
-            <TabPanel>
-              {account && account.toLowerCase() == creatorAddress.toLowerCase() && (
-                <Button colorScheme="blue" size="sm" mb="4" onClick={() => {router.push('/add-tier')}}>
-                  Add Tier
-                </Button>
-              )}
+              {account &&
+                account.toLowerCase() == creatorAddress.toLowerCase() && (
+                  <Button
+                    colorScheme="blue"
+                    size="sm"
+                    mb="4"
+                    onClick={() => {
+                      router.push("/add-tier");
+                    }}
+                  >
+                    Add Tier
+                  </Button>
+                )}
               {loading ? (
                 <Box>Loading ...</Box>
               ) : (
@@ -106,10 +109,20 @@ const Dashboard = () => {
                   {tiers.length == 0 ? (
                     <Box>There is no tiers defined yet</Box>
                   ) : (
-                    tiers.map((tier, i) => <TierItem key={i} tier={tier} mintable />)
+                    tiers.map((tier, i) => (
+                      <TierItem key={i} tier={tier} mintable />
+                    ))
                   )}
                 </SimpleGrid>
               )}
+            </TabPanel>
+            <TabPanel>
+              {account &&
+                account.toLowerCase() == creatorAddress.toLowerCase() && (
+                  <Box>
+                    <PostCreator />
+                  </Box>
+                )}
             </TabPanel>
           </TabPanels>
         </Tabs>
