@@ -7,9 +7,10 @@ import {
   TabPanel,
   SimpleGrid,
 } from "@chakra-ui/react";
-import BalanceManager from "../components/BalanceManager";
-import TierItem from "../components/TierItem";
-import PostCreator from "../components/PostCreator";
+import BalanceManager from "../../components/BalanceManager";
+import TierItem from "../../components/TierItem";
+import PostCreator from "../../components/PostCreator";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
   const tier = {
@@ -25,6 +26,10 @@ const Dashboard = () => {
     royalty: 5,
     durability: 50,
   };
+
+  const router = useRouter();
+
+  console.log(router.query);
 
   return (
     <Box bg="gray.100" h="100vh" p="10">

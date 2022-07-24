@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 
 const CreatorForm = ({ dpName, setDPName, bio, setBio, avatar, setAvatar }) => {
+
   const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
