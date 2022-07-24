@@ -20,19 +20,6 @@ import CreatorRegistry from "../../abis/CreatorRegistry.json";
 import Creator from "../../abis/Creator.json";
 
 const Dashboard = () => {
-  const tier = {
-    image:
-      "https://as2.ftcdn.net/v2/jpg/04/96/77/15/1000_F_496771575_Qcv1lpFmIAHN2ftc5zQxFw4ReDB7kQFF.jpg",
-    title: "Basic Tier",
-    description:
-      "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. Wikipedia",
-    minted: 50,
-    totalSupply: 100,
-    price: 10,
-    messaging: false,
-    royalty: 5,
-    durability: 50,
-  };
 
   const {
     active,
@@ -71,7 +58,7 @@ const Dashboard = () => {
       );
 
       const creatorContractAddress = await registry.creatorsMapping(
-        creatorAddress
+        creatorAddress.toLowerCase()
       );
 
       const creator = creatorPar.attach(creatorContractAddress);
@@ -91,7 +78,7 @@ const Dashboard = () => {
     <Box>
       <Header />
       <Box bg="gray.100" h="calc(100vh - 60px)" p="10">
-        {creatorAddress === account && (
+        {account && creatorAddress.toLowerCase() === account.toLowerCase() && (
           <BalanceManager contractBalance={contractBalance} loading={loading} />
         )}
         <Tabs mt="5">
@@ -107,7 +94,7 @@ const Dashboard = () => {
               </Box>
             </TabPanel>
             <TabPanel>
-              {account && account == creatorAddress && (
+              {account && account.toLowerCase() == creatorAddress.toLowerCase() && (
                 <Button colorScheme="blue" size="sm" mb="4" onClick={() => {router.push('/add-tier')}}>
                   Add Tier
                 </Button>
@@ -119,7 +106,7 @@ const Dashboard = () => {
                   {tiers.length == 0 ? (
                     <Box>There is no tiers defined yet</Box>
                   ) : (
-                    tiers.map((r) => <TierItem key={r} tier={tier} mintable />)
+                    tiers.map((tier, i) => <TierItem key={i} tier={tier} mintable />)
                   )}
                 </SimpleGrid>
               )}

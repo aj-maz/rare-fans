@@ -1,22 +1,41 @@
 import { Box, Image, Text, Flex, Button, Checkbox } from "@chakra-ui/react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const TierItem = ({ tier, mintable }) => {
+  const [info, setInfo] = useState(null);
+
+  console.log(tier);
+  useEffect(() => {
+    axios
+      .get(`https://ipfs.io/ipfs/${tier.info}`)
+      .then((r) => {
+        return r.data;
+      })
+      .then((data) => {
+        setInfo(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <Box>
       <Box bg="orange.50" p="4">
         <Box>
           <Text fontSize="lg" color="orange.400" mb="2" fontWeight="bold">
-            {tier.title}
+            {info?.name}
           </Text>
         </Box>
 
         <Box>
-          <Image src={tier.image} />
+          <Image src={`https://ipfs.io/ipfs/${info?.tierImage}`} />
         </Box>
 
         <Box>
           <Text fontSize="sm" color="gray.600" mt="2">
-            {tier.description}
+            {info?.description}
           </Text>
         </Box>
       </Box>
@@ -25,30 +44,17 @@ const TierItem = ({ tier, mintable }) => {
           <Text fontSize="sm">
             Minting Status:{" "}
             <Text as="span" fontWeight="bold">
-              {tier.minted}/{tier.totalSupply}
+              {tier.alreadyMinted.toString()}/{tier.totalSupply.toString()}
             </Text>
           </Text>
           <Text fontSize="sm">
             Price:{" "}
             <Text as="span" fontWeight="bold">
-              {tier.price} $MATIC
+              {tier.price.toString()} $MATIC
             </Text>
           </Text>
         </Flex>
-        <Flex mt="2" justify="space-between" width="100%" spacing={2}>
-          <Text fontSize="sm">
-            Royalty:{" "}
-            <Text as="span" fontWeight="bold">
-              {tier.royalty}%
-            </Text>
-          </Text>
-          <Text fontSize="sm">
-            Durability:{" "}
-            <Text as="span" fontWeight="bold">
-              {tier.durability} Days
-            </Text>
-          </Text>
-        </Flex>
+
         <Box mt="2">
           <Text fontSize="sm">
             Access to direct message:{" "}
