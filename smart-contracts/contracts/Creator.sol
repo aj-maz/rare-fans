@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract Creator is ERC1155, Ownable {
+
+contract Creator is Initializable, ERC1155Upgradeable, OwnableUpgradeable {
     using Counters for Counters.Counter;
 
     struct Tier {
@@ -22,7 +25,10 @@ contract Creator is ERC1155, Ownable {
     mapping(uint256 => Tier) public tiers;
     mapping(uint256 => string) public posts;
 
-    constructor(string memory _infoUri) ERC1155(_infoUri) {}
+    function initialize(string memory _infoUri) initializer public {
+        __ERC1155_init(_infoUri);
+        __Ownable_init();
+    }
 
     function addTier(
         string memory _info,

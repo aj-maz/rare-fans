@@ -2,15 +2,24 @@ const { expect } = require("chai");
 const { waffle } = require("hardhat");
 
 describe("Creator", function () {
-  let creator, signers;
+  let creator, signers, creatorRegistry;
   const baseURI = "somerandomuri";
 
   describe("Deployment", function () {
     it("Should be able a simple creator ", async function () {
       signers = await ethers.getSigners();
 
+      const CreatorRegistry = await ethers.getContractFactory(
+        "CreatorRegistry"
+      );
+      creatorRegistry = await CreatorRegistry.deploy();
+
+      await creatorRegistry.addCreator(baseURI);
+
+      const creatorAddresses = await creatorRegistry.getCreators();
+
       const Creator = await ethers.getContractFactory("Creator");
-      creator = await Creator.deploy(baseURI);
+      creator = await Creator.attach(creatorAddresses[0]);
     });
   });
 
@@ -18,8 +27,8 @@ describe("Creator", function () {
     it("Owner should be able to add a tier ", async function () {
       await creator.addTier("somerrr", 5000, 300, true);
       await creator.addTier("someother", 250, 30, false);
-      console.log(await creator.getTierIds());
-      console.log(await creator.getTiers());
+      //  console.log(await creator.getTierIds());
+      //  console.log(await creator.getTiers());
     });
 
     it("Not owner should be able to add a tier", async function () {
@@ -46,7 +55,7 @@ describe("Creator", function () {
       await creator.connect(signers[1]).mintTier(1, { value: 250 });
 
       await creator.connect(signers[0]).withdraw();
-      console.log(await creator.getTiers());
+      // console.log(await creator.getTiers());
     });
   });
 
@@ -54,8 +63,8 @@ describe("Creator", function () {
     it("Owner should be able to add a post ", async function () {
       await creator.addPost("asdoasdfokjqwekoqwe");
       await creator.addPost("someotheqweqweqwr");
-      console.log(await creator.getPostsIds());
-      console.log(await creator.getPosts());
+      //console.log(await creator.getPostsIds());
+      //console.log(await creator.getPosts());
     });
   });
 });
