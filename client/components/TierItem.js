@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 const TierItem = ({ tier, mintable }) => {
   const [info, setInfo] = useState(null);
 
-  console.log(tier);
   useEffect(() => {
     axios
       .get(`https://ipfs.io/ipfs/${tier.info}`)

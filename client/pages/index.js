@@ -12,6 +12,8 @@ const Home = () => {
 
   const [nextStep, setNextStep] = useState(false);
 
+  const [creators, setCreators] = useState([]);
+
   const { active, account, library, connector, activate, deactivate } =
     useWeb3React();
 
@@ -39,6 +41,23 @@ const Home = () => {
     };
     action();
   }, [nextStep, library]);
+
+  useEffect(() => {
+    const main = async () => {
+      const provider = new ethers.providers.JsonRpcProvider(
+        "https://polygon-mumbai.g.alchemy.com/v2/PKDcpW-zo09u7KieHzUl5H0qujGgr5nv"
+      );
+
+      const registry = new ethers.Contract(
+        process.env.NEXT_PUBLIC_REGISTRY_ADDRESS,
+        CreatorRegistry.abi,
+        provider
+      );
+
+      setCreators(await registry.getCreatorAddresses());
+    };
+    main();
+  }, []);
 
   useEffect(() => {
     const changeChain = (chainId) => {
@@ -100,19 +119,9 @@ const Home = () => {
           </Button>
         </Center>
         <VStack spacing="20px" maxH="60vh" overflow="auto">
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
-          <CreatorItem />
+          {creators.map((creator) => (
+            <CreatorItem key={creator} creatorAddress={creator} />
+          ))}
         </VStack>
       </Container>
     </Box>

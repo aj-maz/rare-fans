@@ -58,7 +58,7 @@ const Dashboard = () => {
       );
 
       const creatorContractAddress = await registry.creatorsMapping(
-        creatorAddress.toLowerCase()
+        creatorAddress?.toLowerCase()
       );
 
       const creator = creatorPar.attach(creatorContractAddress);
