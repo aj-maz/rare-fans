@@ -11,9 +11,8 @@ contract Creator is ERC1155, Ownable {
         string info;
         uint256 price;
         uint256 totalSupply;
-        uint32 activeDays;
         bool isDM;
-        uint256 royalty;
+        uint256 alreadyMinted;
     }
 
     Counters.Counter private idCounter;
@@ -29,18 +28,11 @@ contract Creator is ERC1155, Ownable {
         string memory _info,
         uint256 _price,
         uint256 _totalSupply,
-        uint32 _activeDays,
-        bool _isDM,
-        uint256 _royalty
+        bool _isDM
     ) public onlyOwner {
-        Tier memory tier = Tier(
-            _info,
-            _price,
-            _totalSupply,
-            _activeDays,
-            _isDM,
-            _royalty
-        );
+        require(_totalSupply > 0, "totalSupply > 0");
+
+        Tier memory tier = Tier(_info, _price, _totalSupply, _isDM, 0);
         tierIds.push(idCounter.current());
         tiers[idCounter.current()] = tier;
         idCounter.increment();
@@ -58,6 +50,40 @@ contract Creator is ERC1155, Ownable {
         return trs;
     }
 
+    function mintTier(uint256 _tierId) public payable {
+        Tier storage tier = tiers[_tierId];
+        require(tier.totalSupply > 0, "Tier does not exists");
+        require(msg.value == tier.price, "Wrong value");
+        require(tier.alreadyMinted <= tier.totalSupply, "Max supply is minted");
+        _mint(msg.sender, _tierId, 1, "");
+        tier.alreadyMinted++;
+    }
+
     // create post
-    // create tier
+
+    function addPost(string memory _postInfo) public onlyOwner {
+        postIds.push(idCounter.current());
+        posts[idCounter.current()] = _postInfo;
+        idCounter.increment();
+    }
+
+    function getPostsIds() public view returns (uint256[] memory) {
+        return postIds;
+    }
+
+    function getPosts() public view returns (string[] memory) {
+        string[] memory psts = new string[](postIds.length);
+        for (uint256 i = 0; i < postIds.length; i++) {
+            psts[i] = posts[postIds[i]];
+        }
+        return psts;
+    }
+
+    // withdraw
+    function withdraw() public onlyOwner {
+        (bool success, ) = payable(msg.sender).call{
+            value: address(this).balance
+        }("");
+        require(success, "Failed to send Ether");
+    }
 }
