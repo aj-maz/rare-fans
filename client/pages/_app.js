@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { LitProvider } from "../lib/LitProvider";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   return (
