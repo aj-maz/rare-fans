@@ -6,16 +6,36 @@ import {
   VStack,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
-const CreatorForm = () => {
+const CreatorForm = ({ dpName, setDPName, bio, setBio, avatar, setAvatar }) => {
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  useEffect(() => {
+    if (avatar) {
+      setAvatarUrl(URL.createObjectURL(avatar));
+    } else {
+      setAvatarUrl("");
+    }
+  }, [avatar]);
+
   return (
-    <VStack py="10" bg="gray.200" width="100%"  spacing={4}>
+    <VStack py="10" bg="gray.200" width="100%" spacing={4}>
       <Box>
         <VisuallyHidden>
-          <input name="avatar" id="avatar" display="hidden" type="file" />
+          <input
+            name="avatar"
+            id="avatar"
+            display="hidden"
+            type="file"
+            accept="image/png, image/gif, image/jpeg"
+            onChange={(e) => {
+              setAvatar(e.target.files[0]);
+            }}
+          />
         </VisuallyHidden>
-        <label for="avatar">
-          <Avatar cursor="pointer" width="90px" height="90px" />
+        <label htmlFor="avatar">
+          <Avatar cursor="pointer" width="90px" height="90px" src={avatarUrl} />
         </label>
       </Box>
       <Box width="90%">
@@ -25,6 +45,8 @@ const CreatorForm = () => {
           width="100%"
           focusBorderColor="blue.600"
           color="gray.700"
+          value={dpName}
+          onChange={(e) => setDPName(e.target.value)}
         />
       </Box>
       <Box width="90%">
@@ -34,6 +56,8 @@ const CreatorForm = () => {
           bg="white"
           placeholder="Bio"
           width="100%"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
         />
       </Box>
     </VStack>
