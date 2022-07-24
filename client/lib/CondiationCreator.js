@@ -1,4 +1,6 @@
 export default () => {
+  const chain = process.env.NEXT_PUBLIC_TARGET_CHAIN;
+
   return [
     {
       contractAddress: "",
@@ -8,7 +10,7 @@ export default () => {
       parameters: [":userAddress", "latest"],
       returnValueTest: {
         comparator: ">=",
-        value: "0", // 0 ETH, so anyone can open
+        value: "10000000000000",
       },
     },
   ];

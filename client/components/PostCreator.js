@@ -3,6 +3,8 @@ import LitJsSdk from "lit-js-sdk";
 import { Button } from "@chakra-ui/react";
 import { LitContext } from "../lib/LitProvider";
 import CondiationCreator from "../lib/CondiationCreator";
+import StoreEncryptionData from "../lib/StoreEncryptionData";
+import FetchEncryptionData from "../lib/FetchEncryptionData";
 
 const message = "Some random message to encrypt";
 const toDecryptMessage =
@@ -10,6 +12,14 @@ const toDecryptMessage =
 
 const PostCreator = () => {
   const { client, loading } = useContext(LitContext);
+
+  const encryptMessage = async (message) => {
+    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
+      message
+    );
+
+    console.log(encryptedString, symmetricKey);
+  };
 
   const doLit = async () => {
     const chain = process.env.NEXT_PUBLIC_TARGET_CHAIN;
@@ -24,6 +34,8 @@ const PostCreator = () => {
       message
     );
 
+    console.log(encryptedString);
+
     const encryptedSymmetricKey = await client.saveEncryptionKey({
       accessControlConditions,
       symmetricKey,
@@ -31,10 +43,18 @@ const PostCreator = () => {
       chain,
     });
 
-    // console.log("encryptedSymmetricKey:", encryptedSymmetricKey);
+    const rootCid = await StoreEncryptionData({
+      accessControlConditions,
+      encryptedSymmetricKey,
+      encryptedString,
+    });
+
+    console.log(`ROOT CID: ${rootCid}`);
+
+    console.log("encryptedSymmetricKey:", encryptedSymmetricKey);
     // console.log("encryptedString:", encryptedString);
 
-    const toDecrypt = LitJsSdk.uint8arrayToString(
+    /* const toDecrypt = LitJsSdk.uint8arrayToString(
       encryptedSymmetricKey,
       "base16"
     );
@@ -64,11 +84,54 @@ const PostCreator = () => {
       //   console.log("decryptedString:", decryptedString);
     } catch (err) {
       //    console.log(err);
-    }
+    }*/
   };
+
+  const decrypt = async ({
+    accessControlConditions,
+    encryptedSymmetricKey,
+    encryptedString,
+  }) => {
+    const chain = process.env.NEXT_PUBLIC_TARGET_CHAIN;
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
+
+    const toDecrypt = LitJsSdk.uint8arrayToString(
+      encryptedSymmetricKey,
+      "base16"
+    );
+
+    const symmetricKey = await client.getEncryptionKey({
+      accessControlConditions,
+      toDecrypt,
+      chain,
+      authSig,
+    });
+
+    const decryptedString = await LitJsSdk.decryptString(
+      encryptedString,
+      symmetricKey
+    );
+
+    console.log(decryptedString);
+  };
+
   return (
     <div>
-      <Button onClick={doLit}>Decrypt</Button>
+      <Button
+        onClick={async () => {
+          //doLit(message);
+          const encryptionData = await FetchEncryptionData(
+            "bafkreiadxvptm556uabfg3jh2bf3jsc2n5rairqt57jexnaok5nf5evyja"
+          );
+          
+          console.log(encryptionData);
+          
+          console.log(await decrypt(encryptionData));
+        }}
+      >
+        Decrypt
+      </Button>
       THis is going to be the post creator
     </div>
   );

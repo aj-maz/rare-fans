@@ -3,5 +3,5 @@ export const Decodeuint8arr = (uint8array) => {
 };
 
 export const Encodeuint8arr = (myString) => {
-  return Uint8Array.from(Object.values(JSON.parse(myString)));
+  return Uint8Array.from(Object.values(myString));
 };

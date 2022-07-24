@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import BalanceManager from "../components/BalanceManager";
 import TierItem from "../components/TierItem";
+import PostCreator from "../components/PostCreator";
 
 const Dashboard = () => {
   const tier = {
@@ -25,7 +26,6 @@ const Dashboard = () => {
     durability: 50,
   };
 
-
   return (
     <Box bg="gray.100" h="100vh" p="10">
       <BalanceManager />
@@ -37,12 +37,14 @@ const Dashboard = () => {
 
         <TabPanels>
           <TabPanel>
-            <Box>Posts going to be here</Box>
+            <Box>
+              <PostCreator />
+            </Box>
           </TabPanel>
           <TabPanel>
             <SimpleGrid minChildWidth="360px" spacing={10}>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((r) => (
-                <TierItem key={r} tier={tier} mintable  />
+                <TierItem key={r} tier={tier} mintable />
               ))}
             </SimpleGrid>
           </TabPanel>
