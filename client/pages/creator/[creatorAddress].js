@@ -10,6 +10,7 @@ import {
 import BalanceManager from "../../components/BalanceManager";
 import TierItem from "../../components/TierItem";
 import PostCreator from "../../components/PostCreator";
+import Header from "../../components/Header";
 import { useRouter } from "next/router";
 
 const Dashboard = () => {
@@ -32,29 +33,32 @@ const Dashboard = () => {
   console.log(router.query);
 
   return (
-    <Box bg="gray.100" h="100vh" p="10">
-      <BalanceManager />
-      <Tabs mt="5">
-        <TabList>
-          <Tab>Posts</Tab>
-          <Tab>Tiers</Tab>
-        </TabList>
+    <Box>
+      <Header />
+      <Box bg="gray.100" h="calc(100vh - px)" p="10">
+        <BalanceManager />
+        <Tabs mt="5">
+          <TabList>
+            <Tab>Posts</Tab>
+            <Tab>Tiers</Tab>
+          </TabList>
 
-        <TabPanels>
-          <TabPanel>
-            <Box>
-              <PostCreator />
-            </Box>
-          </TabPanel>
-          <TabPanel>
-            <SimpleGrid minChildWidth="360px" spacing={10}>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((r) => (
-                <TierItem key={r} tier={tier} mintable />
-              ))}
-            </SimpleGrid>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+          <TabPanels>
+            <TabPanel>
+              <Box>
+                <PostCreator />
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <SimpleGrid minChildWidth="360px" spacing={10}>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((r) => (
+                  <TierItem key={r} tier={tier} mintable />
+                ))}
+              </SimpleGrid>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
     </Box>
   );
 };
