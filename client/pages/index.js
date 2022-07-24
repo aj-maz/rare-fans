@@ -3,16 +3,18 @@ import CreatorItem from "../components/CreatorItem";
 import { injected } from "../lib/connectors";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
+import CreatorRegistry from "../abis/CreatorRegistry.json";
+import { ethers } from "ethers";
+import { useRouter } from "next/router";
 
 const Home = () => {
+  const router = useRouter();
+
   const { active, account, library, connector, activate, deactivate } =
     useWeb3React();
 
-  console.log(active, account, library, connector);
-
   useEffect(() => {
     const changeChain = (chainId) => {
-      console.log(chainId);
       if (chainId !== "0x539") {
         window.ethereum.request({
           method: "wallet_addEthereumChain",
@@ -63,12 +65,30 @@ const Home = () => {
           <Button
             onClick={async () => {
               await connect(injected);
-              //await deactivate()
+
+              const signer = library.getSigner();
+
+              const registry = new ethers.Contract(
+                process.env.NEXT_PUBLIC_REGISTRY_ADDRESS,
+                CreatorRegistry.abi,
+                signer
+              );
+
+              const existed =
+                (await registry.creatorsMapping(account)) !==
+                "0x0000000000000000000000000000000000000000";
+
+              console.log(existed);
+
+              if (existed) {
+                router.push("/dashboard");
+              } else {
+                router.push("/setup");
+              }
             }}
             colorScheme="blue"
           >
-            {" "}
-            Signup as a Creator
+            Your Creator Account
           </Button>
         </Center>
         <VStack spacing="20px" maxH="60vh" overflow="auto">
